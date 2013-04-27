@@ -1,0 +1,50 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script>
+  var server = io.connect('http://localhost:8080');
+
+  server.on('messages', function(data) {
+  	 $('#message').val('hi');
+  	$('#content').Toggle();
+  	$('#content').append(data+'<br>');
+
+  });
+
+  server.on('connect', function(data){
+  	var name = prompt('Enter your name');
+  	server.emit('join', name)
+  });
+
+  server.on('chat', function(data){
+  	  	$('#content').append(data+'<br>');
+  });
+
+  $(document).ready(function(){
+
+	  $('#chat').submit(function(e){
+	  	e.preventDefault();
+	  	var message = $('#message').val();
+	  	document.getElementById('message').value = '';
+	  	if (!message == ''){
+	  		server.emit('messages', message);
+	  	}
+	  });
+
+  });
+
+</script>
+<div id = "content">
+
+
+</div>
+
+<form data-remote = 'true' id = 'chat'>
+
+<input type = 'text' id = "message">
+
+<button type = 'submit' value = 'submit' id = 'submit'>Submit</button>
+
+</form>
+
+
