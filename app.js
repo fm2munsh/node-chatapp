@@ -4,6 +4,14 @@ var app = express()
   , server = http.createServer(app)
   , io = require('socket.io').listen(server);
 
+//DB
+var User = require('./mongo').user;
+var db = require('./mongo').db;
+
+//Clear Database
+user = User.find();
+user.remove();
+
 //App config
 app.configure(function(){
 	app.set('view engine', 'ejs'); 
@@ -11,47 +19,9 @@ app.configure(function(){
 });
 
 //Routes
-app.get('/', function(req, res){ 
-	res.render("index.ejs", {layout:false});
-});
+require('./routes')(app, db, User);
 
-var message_array = [];
-var updateMessages = function (name, data){
-	message_array.push({name: name, data: data})
-
-	if (message_array.length > 10) {
-		message_array.shift();
-	}
-}
-
-//Socket
-io.sockets.on('connection', function(client){
-	console.log('Cient connected ...')
-	
-	client.on('join', function(name){
-		client.set('name', name);
-		message_array.forEach(function(message){
-			client.emit('chat', message.name + ': ' + message.data);
-		});
-	});
-
-	client.on('messages', function(data){
-		console.log(data);
-
-		var user_name = '';
-
-		client.get('name', function(e , name){
-			console.log(name);
-			user_name = name;
-		});
-
-		updateMessages(user_name, data);
-
-		client.emit('chat', user_name + ': ' + data);
-		client.broadcast.emit('chat', user_name + ': ' + data);
-
-	});
-
-});
+//Socket io
+require('./socket')(app, db, User, io);
 
 server.listen(8080);

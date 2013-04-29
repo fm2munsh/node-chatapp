@@ -20,6 +20,10 @@
   	  	$('#content').append(data+'<br>');
   });
 
+  server.on('userIn', function(data){
+        $('#users').append(data+'<br>');
+  });
+
   $(document).ready(function(){
 
 	  $('#chat').submit(function(e){
@@ -47,4 +51,10 @@
 
 </form>
 
+
+<div id = 'users'>
+
+</div>
+
+<%= user %>
 
