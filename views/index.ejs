@@ -1,19 +1,23 @@
 <script src="/socket.io/socket.io.js"></script>
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="../assets/js/jquery-2.0.0.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
 
 <script>
+
   var server = io.connect('http://localhost:8080');
 
   server.on('messages', function(data) {
-  	 $('#message').val('hi');
+  	$('#message').val('hi');
   	$('#content').Toggle();
   	$('#content').append(data+'<br>');
 
   });
 
   server.on('connect', function(data){
+
   	var name = prompt('Enter your name');
   	server.emit('join', name)
+    
   });
 
   server.on('chat', function(data){
@@ -22,6 +26,10 @@
 
   server.on('userIn', function(data){
         $('#users').append(data+'<br>');
+  });
+
+  server.on('userLeft', function(){
+    $('#users').text('');
   });
 
   $(document).ready(function(){
@@ -38,6 +46,7 @@
   });
 
 </script>
+
 <div id = "content">
 
 
