@@ -1,69 +1,65 @@
-<script src="/socket.io/socket.io.js"></script>
-<script src="../assets/js/jquery-2.0.0.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node Chat</title>
 
-<script>
 
-  var server = io.connect('http://localhost:8080');
 
-  server.on('messages', function(data) {
-  	$('#message').val('hi');
-  	$('#content').Toggle();
-  	$('#content').append(data+'<br>');
+  </head>
 
-  });
+<body> 
+      <!-- Le styles  -->
+    <link href="css/app.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
 
-  server.on('connect', function(data){
+    <!-- Libraries  -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="lib/jquery-2.0.0.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="js/socket.js"></script>
 
-  	var name = prompt('Enter your name');
-  	server.emit('join', name)
-    
-  });
-
-  server.on('chat', function(data){
-  	  	$('#content').append(data+'<br>');
-  });
-
-  server.on('userIn', function(data){
-        $('#users').append(data+'<br>');
-  });
-
-  server.on('userLeft', function(){
-    $('#users').text('');
-  });
+  <script type="text/javascript">
 
   $(document).ready(function(){
 
-	  $('#chat').submit(function(e){
-	  	e.preventDefault();
-	  	var message = $('#message').val();
-	  	document.getElementById('message').value = '';
-	  	if (!message == ''){
-	  		server.emit('messages', message);
-	  	}
-	  });
+    $('#chat').submit(function(event){
+
+      event.preventDefault();
+
+      var message = $('#message').val();
+      $('#message').val('');
+      
+      if (!message == ''){
+        server.emit('messages', message);
+      }
+      return false;
+    });
 
   });
 
-</script>
-
-<div id = "content">
+  </script>
 
 
-</div>
+  <div class = "messageBox">
 
-<form data-remote = 'true' id = 'chat'>
+    <div id = 'users'>
 
-<input type = 'text' id = "message">
+    </div>
 
-<button type = 'submit' value = 'submit' id = 'submit'>Submit</button>
+    <div id = 'messages'>
 
-</form>
+    </div>
 
+    <form id = 'chat'>
 
-<div id = 'users'>
+      <input type = 'text' id = "message">
 
-</div>
+      <button class = 'btn' type = 'submit' value = 'send' id = 'submit'>Submit</button>
 
-<%= user %>
+    </form>
+
+  </div>
+
+  <%= user %>
+</body>
 
